@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeBySrWinter</title>
+    <style>
+        body {
+            background: #1c1c1c;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow: hidden; /* Prevent scroll during loading */
+        }
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #1e1e1e;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loader div {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #fff;
+            border-top: 5px solid #a4f9ef;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        .loader p {
+            color: #fff;
+            font-size: 18px;
+            margin: 0;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        header {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(30, 30, 30, 0.9);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-bottom: 2px solid #2e2e2e;
+            justify-content: space-between;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.2s, color 0.2s;
+            color: #fff;
+        }
+        header h1:hover {
+            transform: scale(1.1);
+            color: #a4f9ef;
+        }
+        nav {
+            display: flex;
+            gap: 20px;
+            margin-left: 20px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            padding: 5px 10px;
+            transition: transform 0.2s, background-color 0.2s, color 0.2s;
+            border-radius: 5px;
+        }
+        nav a:hover {
+            transform: scale(1.1);
+            background-color: #a4f9ef;
+            color: #1e1e1e;
+        }
+        main {
+            padding: 20px;
+            flex: 1;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+        .socials {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+        .socials img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        .socials a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        .socials-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+        }
+        .projects, .about {
+            display: none;
+        }
+        .project-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .project-item h3 {
+            margin: 0 0 10px 0;
+            color: #a4f9ef;
+        }
+        .project-item p {
+            margin: 0 0 10px 0;
+        }
+        .project-item button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .project-item button:hover {
+            transform: scale(1.1);
+            background-color: #45a049;
+        }
+        .skills {
+            margin-top: 20px;
+        }
+        .skills h3 {
+            color: #a4f9ef;
+        }
+        .skills ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .skills li {
+            font-size: 18px;
+            margin: 5px 0;
+        }
+        .color-menu {
+            display: none;
+            position: absolute;
+            right: 20px;
+            top: 60px;
+            background: rgba(30, 30, 30, 0.9);
+            border: 1px solid #2e2e2e;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .color-menu button {
+            display: block;
+            width: 30px;
+            height: 30px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: transform 0.2s, border 0.2s;
+        }
+        .color-menu button:hover {
+            transform: scale(1.2);
+            border: 2px solid #a4f9ef;
+        }
+        .color-menu-toggle button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .color-menu-toggle button:hover {
+            transform: scale(1.1);
+            background-color: #45a049;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script> <!-- Include particles.js library from CDN -->
+</head>
+<body>
+<div id="particles-js"></div>
+<div class="loader">
+    <div></div>
+    <p>Loading...</p>
+</div>
+<header>
+    <h1 onclick="window.location.href='#'">CodeBySrWinter</h1>
+    <nav>
+        <a href="#" onclick="showSection('projects')">Projects</a>
+        <a href="#" onclick="showSection('about')">About Me</a>
+    </nav>
+    <div class="color-menu-toggle">
+        <button onclick="toggleColorMenu()">Change Line Color</button>
+        <div class="color-menu" id="color-menu">
+            <button style="background-color: #ffffff;" onclick="changeLineColor('#ffffff')"></button>
+            <button style="background-color: #ff0000;" onclick="changeLineColor('#ff0000')"></button>
+            <button style="background-color: #00ff00;" onclick="changeLineColor('#00ff00')"></button>
+            <button style="background-color: #0000ff;" onclick="changeLineColor('#0000ff')"></button>
+            <button style="background-color: #ffff00;" onclick="changeLineColor('#ffff00')"></button>
+            <button style="background-color: #ff00ff;" onclick="changeLineColor('#ff00ff')"></button>
+            <button style="background-color: #00ffff;" onclick="changeLineColor('#00ffff')"></button>
+        </div>
+    </div>
+</header>
+<main>
+    <section id="projects" class="projects">
+        <h2>Recent Projects</h2>
+        <div id="project-list">
+            <div class="project-item">
+                <h3>DiscordRoleBot</h3>
+                <p>This Discord Bot allows you to simply add roles to a mentioned user. This bot is extremely good for whitelisting features and simple mentioning things.</p>
+                <button onclick="window.open('https://github.com/SrWinter/DiscordRoleBot', '_blank')">View on GitHub</button>
+            </div>
+            <div class="project-item">
+                <h3>PavlovBanSystem</h3>
+                <p>A detailed ban system for Pavlov Shack. It uses your RCON credentials and allows you to use ban and unban commands.</p>
+                <button onclick="window.open('https://github.com/SrWinter/PavlovBanSystem', '_blank')">View on GitHub</button>
+            </div>
+            <div class="project-item">
+                <h3>WebToPavlov</h3>
+                <p>A web-based interface for interacting with Pavlov servers, allowing for easier management and configuration.</p>
+                <button onclick="window.open('https://github.com/SrWinter/WebToPavlov', '_blank')">View on GitHub</button>
+            </div>
+        </div>
+    </section>
+    <section id="about" class="about">
+        <h2>About Me</h2>
+        <p>Hi! My name is SrWinter. I like to program things in my free time and create stuff for a VR shooter called Pavlov VR. I can do some things in Unreal Engine 5, but prefer coding in an IDEA than anything! Please join my discord and create a ticket if you have any questions!</p>
+        <div class="skills">
+            <h3>Skills</h3>
+            <ul>
+                <li>Python: 3 years of experience</li>
+                <li>HTML: 1 year of experience</li>
+            </ul>
+        </div>
+        <div class="socials-wrapper">
+            <div class="socials">
+                <a href="https://discord.gg/2nJCse3Cnp">
+                    <img src="discord_logo.png" alt="Discord">
+                    Discord
+                </a>
+                <a href="https://github.com/SrWinter">
+                    <img src="github_logo.png" alt="GitHub">
+                    GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+<script>
+    function showSection(sectionId) {
+        document.querySelectorAll('main > section').forEach(section => {
+            section.style.display = 'none';
+        });
+        document.getElementById(sectionId).style.display = 'block';
+    }
+
+    function cycleLoadingText() {
+        const loaderText = document.querySelector('.loader p');
+        let dots = 0;
+        return setInterval(() => {
+            dots = (dots + 1) % 4;
+            loaderText.textContent = 'Loading' + '.'.repeat(dots);
+        }, 500);
+    }
+
+    function toggleColorMenu() {
+        const colorMenu = document.getElementById('color-menu');
+        colorMenu.style.display = colorMenu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function changeLineColor(color) {
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 100,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ffffff"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    },
+                    "image": {
+                        "src": "img/github.svg",
+                        "width": 100,
+                        "height": 100
+                    }
+                },
+                "opacity": {
+                    "value": 0.8,
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 2,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": color,
+                    "opacity": 0.8,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 140,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        showSection('projects');
+        const loader = document.querySelector('.loader');
+        const mainContent = document.querySelector('main');
+        const loadingInterval = cycleLoadingText();
+        setTimeout(() => {
+            clearInterval(loadingInterval);
+            loader.classList.add('hidden');
+            mainContent.style.opacity = 1;
+        }, 2000); // 2 seconds loading time
+
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {
+                    "value": 100,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ffffff"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    },
+                    "image": {
+                        "src": "img/github.svg",
+                        "width": 100,
+                        "height": 100
+                    }
+                },
+                "opacity": {
+                    "value": 0.8,
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 2,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ffffff",
+                    "opacity": 0.8,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 140,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+    });
+</script>
+</body>
+</html>
